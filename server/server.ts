@@ -29,6 +29,8 @@ app.get("/", (_req: Request, res: Response) => {
     res.send("Server is Live!");
 });
 
+
+
 app.use("/api/auth", authRouter);
 app.use("/api/oauth", socialAuthRouter);
 app.use("/api/accounts", accountRouter);
