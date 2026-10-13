@@ -182,19 +182,15 @@ export const schedulePost = async (req: AuthRequest, res: Response): Promise<voi
         let mediaUrl: string | undefined = req.body.mediaUrl;
         let mediaType: "image" | "video" | undefined = req.body.mediaType;
 
-        if (req.file) {
-            const result = await new Promise<any>((resolve, reject) => {
-                const stream = cloudinary.uploader.upload_stream(
-                    { resource_type: "auto", folder: "social-scheduler" },
-                    (error, result) => {
-                        if (error) reject(error);
-                        else resolve(result);
-                    }
-                );
-
+        if(req.file){
+            const result = await new Promise<any>((resolve, reject)=>{
+                const stream = cloudinary.uploader.upload_stream({resource_type: "auto",
+                folder: "social-scheduler"}, (error, result)=>{
+                    if(error) reject(error);
+                    else resolve(result)
+                });
                 stream.end(req.file!.buffer);
             });
-
             mediaUrl = result.secure_url;
             mediaType = result.resource_type === "video" ? "video" : "image";
         }
@@ -212,6 +208,7 @@ export const schedulePost = async (req: AuthRequest, res: Response): Promise<voi
         res.status(201).json(post);
 
     } catch (error: any) {
+        console.error("SCHEDULE POST ERROR:", error);
         res.status(500).json({ message: error?.message || "Server error" });
     }
 }
